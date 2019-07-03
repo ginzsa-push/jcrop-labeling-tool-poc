@@ -30,11 +30,10 @@ First you create a project name, and set the images location path.
 
 
 For example if I have the cocodataset in my external drive ...
-````
+
+```
 Name: coco
-
 Image location: /Volumes/Transcend/cocodataset/val2017
-
 Destination: /Volumes/Transcend/cocodataset/val2017/dest
 ```
 
