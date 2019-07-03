@@ -1,0 +1,124 @@
+<html>
+<head>
+    <title>Select or crate project</title>
+      <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+{% load static %}
+
+    <script src="{% static "cropLabel/js/jquery.min.js" %}"></script>
+
+    <script>
+        var ready = {{ imagesReady }};
+        if (ready == 0) {
+            alert('Selected project\'s images not available');
+        }
+    </script>
+</head>
+    <title>Images Labeling Project</title>
+    <body>
+        <div id="error"></div>
+        <div id="prjcts">
+        </div>
+        <div id="separator"></div>
+        <label>
+                {% csrf_token %}
+            <legend>Add new project</legend>
+            <label>Project Name: </label><input type="input" id="projectName" value="" maxlength="200"/></label>
+            <label>Image Location: <input type="input" id="projectPath" value="" maxlength="200"/></label>
+            <label>Destination: <input type="input" id="destination" value="" maxlength="200"/></label>
+            <input type="button" value="Create" id="post-btn"/>
+        </div>
+
+    </body>
+<footer>
+    <script>
+        var projects = {{ project_list }}
+        refreshProjectList()
+
+       $("#post-btn").click(function(){
+            requestData = {
+                projectName:$('#projectName').val(),
+                projectPath:$('#projectPath').val(),
+                destination:$('#destination').val()
+            }
+            postProject(requestData);
+        });
+
+    function refreshProjectList() {
+        $('#prjcts').empty();
+        $.each(projects, function( index, value ){
+            var inner ="<div id=\"prjct\"><div>Project name: "+ value['projectName']+"</div> "
+            +" <div>Project path: "+value['projectPath']+"</div><div>Destination: "+value['destination']+"</div></div>"
+            + "<input type=\"button\" value=\"Select\" id=\"sel-btn-"+value['projectName']+"\"/>"
+            + "<input type=\"button\" value=\"Delete\" id=\"del-btn-"+value['projectName']+"\"/>";
+            console.log(inner);
+
+            $('#prjcts').append(inner);
+
+            $("#del-btn-"+value['projectName']).click(function(){
+                ok = confirm("del-btn-"+value['projectName']);
+                if (ok) {
+                    deleteProject(value['projectName']);
+                }
+            });
+
+            $("#sel-btn-"+value['projectName']).click(function(){
+                    selectProject(value['projectName']);
+            });
+        });
+    }
+
+    //todo server side interactions
+    function postProject(requestData) {
+        console.log(requestData);
+        var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+        console.log(csrftoken);
+
+        $.ajax({
+            url: 'http://localhost:8000/createProject/',
+            type: 'post',
+            data: JSON.stringify(requestData),
+            headers: {
+                "X-CSRFToken": csrftoken
+            },
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function (response) {
+                projects = response['projects'];
+                refreshProjectList();
+            },
+            error: function(response) {
+                alert('Error: ' + response.responseText);
+            }
+        });
+
+        return false;
+    }
+
+    function deleteProject(projectName) {
+        console.log(projectName);
+        var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val();
+
+        $.ajax({
+                url: `http://localhost:8000/deleteProject/${projectName}/`,
+                type: 'GET',
+                success: function(response){
+                        projects = response['projects'];
+                        refreshProjectList();
+                 },
+                 error: function(response) {
+                    alert(`woops! ${projectName}` +response); //or whatever
+                  }
+        });
+
+        return false;
+    }
+
+    function selectProject(projectName) {
+        console.log(projectName);
+        window.location.href = '/init?project='+projectName
+        return false;
+
+    }
+    </script>
+</footer>
+</html>

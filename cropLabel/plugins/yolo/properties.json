@@ -1,0 +1,6 @@
+{
+  "id": "yolo",
+  "name": "Yolo",
+  "version": "1.0",
+  "transformer": "Yolo3Transform.py"
+}
