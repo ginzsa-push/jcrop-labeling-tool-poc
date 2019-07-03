@@ -4,9 +4,13 @@ This a POC trying to use Jcrop for labelling images
 The application use the following libraries
 
 Jcrop and Jquery for the front end app
-Python 3.6 and Django for the appliction
-OpenCv for image cropping
+see more: http://deepliquid.com/content/Jcrop.html
 
+Python 3.6 and Django for the appliction
+see more: https://www.djangoproject.com/
+
+OpenCV for image cropping
+see more: https://pypi.org/project/opencv-python/
 
 ```
 python --version
