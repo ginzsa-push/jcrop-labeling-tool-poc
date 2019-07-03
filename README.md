@@ -31,11 +31,9 @@ First you create a project name, and set the images location path.
 
 For example if I have the cocodataset in my external drive ...
 
-```
 Name: coco
 Image location: /Volumes/Transcend/cocodataset/val2017
 Destination: /Volumes/Transcend/cocodataset/val2017/dest
-```
 
 The second page show the images, with the ability to swap through them. It also an area can be selected and a label modal window where the user can create a new label or use an existing one.
 
